@@ -3,10 +3,11 @@ import {ref} from "vue";
 import {getUserLoginUsingGet} from "@/api/userManage";
 
 export const useLoginUserStore = defineStore("loginUser", () => {
-  const loginUser = ref<any>({
+  const loginUser = ref<API.UserLoginVo>({
     id: '',
     userName: "未登录",
     userAvatar: "",
+    userRole: "",
   });
 
   async function fetchLoginUser() {

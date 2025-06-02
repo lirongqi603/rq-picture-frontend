@@ -36,7 +36,7 @@
 <script lang="ts" setup>
 import {reactive} from 'vue';
 import {userLoginUsingPost} from "@/api/userManage";
-import {useLoginUserStore} from "@/stores/counter";
+import {useLoginUserStore} from "@/stores/useLoginUserStore";
 import {message} from "ant-design-vue";
 import {useRouter} from "vue-router";
 

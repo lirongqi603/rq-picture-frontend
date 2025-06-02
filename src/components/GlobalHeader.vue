@@ -43,15 +43,30 @@
   </div>
 </template>
 <script setup lang="ts">
-import {h, ref} from 'vue';
+import {computed, h, ref} from 'vue';
 import {HomeOutlined, DownOutlined, LoginOutlined} from '@ant-design/icons-vue';
 import {MenuProps, message} from 'ant-design-vue';
 import {useRouter} from "vue-router";
-import {useLoginUserStore} from "@/stores/counter";
+import {useLoginUserStore} from "@/stores/useLoginUserStore";
 import {userLogoutUsingPost} from "@/api/userManage";
 
+//动态路演跳转
+const router = useRouter();
+const doMenuClick = ({key}) => {
+  router.push({
+    path: key
+  })
+}
 
-const items = ref<MenuProps['items']>([
+//菜单高亮
+const current = ref<string[]>([]);
+router.afterEach((to, form, next) => {
+  current.value = [to.path]
+})
+
+const loginUserStore = useLoginUserStore();
+
+const originItems = ref<MenuProps['items']>([
   {
     key: '/',
     icon: () => h(HomeOutlined),
@@ -70,31 +85,30 @@ const items = ref<MenuProps['items']>([
   },
 ]);
 
-//动态路演跳转
-const router = useRouter();
-const doMenuClick = ({key}) => {
-  router.push({
-    path: key
+const filterMenu = (menus = [] as MenuProps['items']) => {
+  if (!Array.isArray(menus)) {
+    return [];
+  }
+
+  return menus?.filter((item) => {
+    if (item.key.startsWith("/admin")) {
+      const loginUser = loginUserStore.loginUser;
+      if (!loginUser || loginUser.userRole !== "admin") {
+        return false
+      }
+    }
+    return true
   })
 }
 
-//菜单高亮
-const current = ref<string[]>([]);
-router.afterEach((to, form, next) => {
-  current.value = [to.path]
-})
-
-const loginUserStore = useLoginUserStore();
+const items = computed<MenuProps['items']>(() => filterMenu(originItems.value))
 
 const doLogout = async () => {
   try {
     const res = await userLogoutUsingPost()
     if (res.data.code === 0) {
       message.success("退出登录成功")
-      await router.push({
-        path: "/user/login",
-        replace: true
-      })
+      window.location.href = "/user/login"
     } else {
       message.success("退出登录失败")
     }
