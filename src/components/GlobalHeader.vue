@@ -15,7 +15,23 @@
       <a-col flex="100px">
         <div class="user-login-status">
           <div v-if="loginUserStore.loginUser.id">
-            {{ loginUserStore.loginUser.userName ?? '无名' }}
+            <a-dropdown>
+              <a-space>
+                <a-avatar :src="loginUserStore.loginUser.userAvatar"/>
+                <a class="ant-dropdown-link" @click.prevent>
+                  {{ loginUserStore.loginUser.userName ?? '无名' }}
+                  <DownOutlined/>
+                </a>
+              </a-space>
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item @click="doLogout">
+                    <LoginOutlined/>
+                    退出登录
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
           </div>
           <div v-else>
             <a-button type="primary" href="/user/login">登录</a-button>
@@ -28,10 +44,12 @@
 </template>
 <script setup lang="ts">
 import {h, ref} from 'vue';
-import {HomeOutlined} from '@ant-design/icons-vue';
-import {MenuProps} from 'ant-design-vue';
+import {HomeOutlined, DownOutlined, LoginOutlined} from '@ant-design/icons-vue';
+import {MenuProps, message} from 'ant-design-vue';
 import {useRouter} from "vue-router";
 import {useLoginUserStore} from "@/stores/counter";
+import {userLogoutUsingPost} from "@/api/userManage";
+
 
 const items = ref<MenuProps['items']>([
   {
@@ -41,9 +59,9 @@ const items = ref<MenuProps['items']>([
     title: '主页',
   },
   {
-    key: '/about',
-    label: '关于',
-    title: '关于',
+    key: '/admin/userManage',
+    label: '用户管理',
+    title: '用户管理',
   },
   {
     key: '/search',
@@ -67,6 +85,23 @@ router.afterEach((to, form, next) => {
 })
 
 const loginUserStore = useLoginUserStore();
+
+const doLogout = async () => {
+  try {
+    const res = await userLogoutUsingPost()
+    if (res.data.code === 0) {
+      message.success("退出登录成功")
+      await router.push({
+        path: "/user/login",
+        replace: true
+      })
+    } else {
+      message.success("退出登录失败")
+    }
+  } catch (e) {
+    message.success("退出登录失败", e)
+  }
+}
 </script>
 <style scoped>
 #globalHeader .title-bar {
