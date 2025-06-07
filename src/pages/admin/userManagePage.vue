@@ -57,15 +57,15 @@
     >
       <a-form ref="formRef" :model="formState" layout="vertical" name="form_in_modal">
         <a-form-item
-          name="账号"
+          name="userAccount"
           label="账号"
           :rules="formState.id ? [] : [
             { required: true, message: '账号不能为空' },
-            { max: 16, message: '账号长度不能大于20' },
+            { max: 16, message: '账号长度不能大于16' },
             { min: 4, message: '账号长度不能小于4' },
             ]"
         >
-          <a-input v-model:value="formState.userAccount" :disabled="formState.id!==''"/>
+          <a-input v-model:value="formState.userAccount"/>
         </a-form-item>
         <a-form-item
           name="userName"
@@ -78,7 +78,24 @@
           <a-input v-model:value="formState.userName"/>
         </a-form-item>
         <a-form-item name="userProfile" label="用户头像">
-          <a-image :src="formState.userAvatar"></a-image>
+          <a-upload
+            v-model:file-list="fileList"
+            name="file"
+            list-type="picture-card"
+            class="avatar-uploader"
+            :show-upload-list="false"
+            :action=uploadUrl
+            :before-upload="beforeUpload"
+            :with-credentials="true"
+            @change="handleChange"
+          >
+            <img v-if="imageUrl" :src="imageUrl" alt="avatar" style="width: 100%"/>
+            <div v-else>
+              <loading-outlined v-if="loading"></loading-outlined>
+              <plus-outlined v-else></plus-outlined>
+              <div class="ant-upload-text">上传头像</div>
+            </div>
+          </a-upload>
         </a-form-item>
         <a-form-item name="userProfile" label="用户简介"
                      :rules="[
@@ -98,7 +115,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, reactive, ref, toRaw} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import {
   getInfoUsingGet,
   userAddUsingPost,
@@ -107,7 +124,9 @@ import {
   userUpdateUsingPost
 } from "@/api/userManage";
 import {message} from "ant-design-vue";
-import {SearchOutlined, UserAddOutlined} from '@ant-design/icons-vue';
+import {SearchOutlined, UserAddOutlined, PlusOutlined, LoadingOutlined} from '@ant-design/icons-vue';
+import type {UploadChangeParam, UploadProps} from 'ant-design-vue';
+
 
 const columns = [
   {
@@ -220,7 +239,7 @@ const handleSearch = () => {
 }
 const formTitle = ref<any>("修改用户")
 const visible = ref<boolean>(false)
-const formState = ref<any>({
+const formState = reactive<any>({
   id: "",
   userAccount: "",
   userName: "",
@@ -231,14 +250,15 @@ const formState = ref<any>({
 
 const reset = () => {
   formRef.value?.resetFields();
-  formState.value = {
+  imageUrl.value = '';
+  Object.assign(formState, {
     id: "",
     userAccount: "",
     userName: "",
     userAvatar: "",
     userProfile: "",
     userRole: "user",
-  }
+  })
 }
 
 const openUpdate = async (id) => {
@@ -248,7 +268,8 @@ const openUpdate = async (id) => {
   try {
     const res = await getInfoUsingGet({id: id});
     if (res.data.code === 0) {
-      formState.value = res.data.data
+      Object.assign(formState, res.data.data)
+      imageUrl.value = res.data.data.userAvatar
     } else {
       message.error("获取信息失败")
     }
@@ -264,7 +285,7 @@ const openAdd = async () => {
 }
 const formRef = ref();
 const onSubmit = async () => {
-  const form = formState.value
+  const form = formState
   formRef.value
     .validate()
     .then(async () => {
@@ -306,5 +327,58 @@ const onSubmit = async () => {
       console.log('error', error);
     });
 }
-</script>
 
+const fileList = ref([]);
+const loading = ref<boolean>(false);
+const imageUrl = ref<string>('');
+const uploadUrl = ref('http://localhost:8080/api/file/uploadAvatar');
+
+const handleChange = (info: UploadChangeParam) => {
+  if (info.file.status === 'uploading') {
+    loading.value = true;
+    return;
+  }
+  if (info.file.status === 'done') {
+    if (info.file.response.code === 0) {
+      imageUrl.value = info.file.response.data;
+      formState.userAvatar = info.file.response.data;
+      message.success('上传成功');
+    } else {
+      message.success('上传失败', info.file.response.message);
+    }
+    loading.value = false;
+  }
+  if (info.file.status === 'error') {
+    loading.value = false;
+    message.error('上传失败');
+  }
+};
+
+const beforeUpload = (file: UploadProps['fileList'][number]) => {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  if (!isJpgOrPng) {
+    message.error('图片格式不正确，仅允许jpeg/png');
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error('用户头像大于2MB!');
+  }
+  return isJpgOrPng && isLt2M;
+};
+</script>
+<style scoped>
+.avatar-uploader > .ant-upload {
+  width: 128px;
+  height: 128px;
+}
+
+.ant-upload-select-picture-card i {
+  font-size: 32px;
+  color: #999;
+}
+
+.ant-upload-select-picture-card .ant-upload-text {
+  margin-top: 8px;
+  color: #666;
+}
+</style>
