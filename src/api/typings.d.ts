@@ -23,6 +23,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseUserInfoVo_ = {
+    code?: number
+    data?: UserInfoVo
+    message?: string
+  }
+
   type BaseResponseUserLoginVo_ = {
     code?: number
     data?: UserLoginVo
@@ -31,6 +37,11 @@ declare namespace API {
 
   type DeletedRequest = {
     id?: number
+  }
+
+  type getInfoUsingGETParams = {
+    /** id */
+    id: number
   }
 
   type IPageUserQueryListVo_ = {
@@ -52,6 +63,23 @@ declare namespace API {
     userProfile?: string
     /** 用户角色：user/admin */
     userRole: string
+  }
+
+  type UserInfoVo = {
+    /** id */
+    id?: number
+    /** 账号 */
+    userAccount?: string
+    /** 用户昵称 */
+    userName?: string
+    /** 用户头像 */
+    userAvatar?: string
+    /** 用户简介 */
+    userProfile?: string
+    /** 用户角色：user/admin */
+    userRole?: string
+    /** 创建时间 */
+    createTime?: string
   }
 
   type UserLoginRequest = {
