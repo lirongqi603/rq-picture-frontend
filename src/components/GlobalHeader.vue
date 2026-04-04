@@ -48,7 +48,7 @@ import {HomeOutlined, DownOutlined, LoginOutlined} from '@ant-design/icons-vue';
 import {MenuProps, message} from 'ant-design-vue';
 import {useRouter} from "vue-router";
 import {useLoginUserStore} from "@/stores/useLoginUserStore";
-import {userLogoutUsingPost} from "@/api/userManage";
+import {userLogoutUsingPost} from "@/api/userController";
 
 //动态路演跳转
 const router = useRouter();

@@ -122,7 +122,7 @@ import {
   userDeleteUsingPost,
   userListUsingPost,
   userUpdateUsingPost
-} from "@/api/userManage";
+} from "@/api/userController";
 import {message} from "ant-design-vue";
 import {SearchOutlined, UserAddOutlined, PlusOutlined, LoadingOutlined} from '@ant-design/icons-vue';
 import type {UploadChangeParam, UploadProps} from 'ant-design-vue';

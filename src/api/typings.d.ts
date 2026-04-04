@@ -17,6 +17,36 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponsePagePicture_ = {
+    code?: number
+    data?: PagePicture_
+    message?: string
+  }
+
+  type BaseResponsePagePictureVo_ = {
+    code?: number
+    data?: PagePictureVo_
+    message?: string
+  }
+
+  type BaseResponsePicture_ = {
+    code?: number
+    data?: Picture
+    message?: string
+  }
+
+  type BaseResponsePictureTagCategory_ = {
+    code?: number
+    data?: PictureTagCategory
+    message?: string
+  }
+
+  type BaseResponsePictureVo_ = {
+    code?: number
+    data?: PictureVo
+    message?: string
+  }
+
   type BaseResponseString_ = {
     code?: number
     data?: string
@@ -44,12 +74,167 @@ declare namespace API {
     id: number
   }
 
+  type getPictureByIdUsingGETParams = {
+    /** id */
+    id?: number
+  }
+
+  type getPictureVoByIdUsingGETParams = {
+    /** id */
+    id?: number
+  }
+
   type IPageUserQueryListVo_ = {
     current?: number
     pages?: number
     records?: UserQueryListVo[]
     size?: number
     total?: number
+  }
+
+  type PagePicture_ = {
+    current?: number
+    pages?: number
+    records?: Picture[]
+    size?: number
+    total?: number
+  }
+
+  type PagePictureVo_ = {
+    current?: number
+    pages?: number
+    records?: PictureVo[]
+    size?: number
+    total?: number
+  }
+
+  type Picture = {
+    category?: string
+    createTime?: string
+    editTime?: string
+    id?: number
+    introduction?: string
+    isDelete?: number
+    name?: string
+    picFormat?: string
+    picHeight?: number
+    picScale?: number
+    picSize?: number
+    picWidth?: number
+    tags?: string
+    updateTime?: string
+    url?: string
+    userId?: number
+  }
+
+  type PictureEditRequest = {
+    /** 图片id */
+    id: number
+    /** 图片名称 */
+    name?: string
+    /** 简介 */
+    introduction?: string
+    /** 分类 */
+    category?: string
+    /** 标签 */
+    tags?: string[]
+  }
+
+  type PictureQueryRequest = {
+    /** 图片id */
+    id?: number
+    /** 图片名称 */
+    name?: string
+    /** 简介 */
+    introduction?: string
+    /** 分类 */
+    category?: string
+    /** 标签 */
+    tags?: string[]
+    /** 用户ID */
+    userId?: number
+    /** 关键字搜索 */
+    searchText?: string
+    /** 图片体积 */
+    picSize?: number
+    /** 图片宽度 */
+    picWidth?: number
+    /** 图片高度 */
+    picHeight?: number
+    /** 图片宽高比例 */
+    picScale?: number
+    /** 图片格式 */
+    picFormat?: string
+    /** 页码 */
+    current?: number
+    /** 每页条数 */
+    pageSize?: number
+    /** 排序字段 */
+    sortField?: string
+    /** 排序规则 */
+    sortOrder?: string
+  }
+
+  type PictureTagCategory = {
+    /** 标签列表 */
+    tagList?: string[]
+    /** 分类列表 */
+    categoryList?: string[]
+  }
+
+  type PictureUpdateRequest = {
+    /** 图片id */
+    id: number
+    /** 图片名称 */
+    name?: string
+    /** 简介 */
+    introduction?: string
+    /** 分类 */
+    category?: string
+    /** 标签 */
+    tags?: string[]
+  }
+
+  type PictureVo = {
+    /** id */
+    id?: number
+    /** 图片 url */
+    url?: string
+    /** 图片名称 */
+    name?: string
+    /** 简介 */
+    introduction?: string
+    /** 分类 */
+    category?: string
+    /** 标签 */
+    tags?: string[]
+    /** 图片体积 */
+    picSize?: number
+    /** 图片宽度 */
+    picWidth?: number
+    /** 图片高度 */
+    picHeight?: number
+    /** 图片宽高比例 */
+    picScale?: number
+    /** 图片格式 */
+    picFormat?: string
+    user?: UserInfoVo
+    /** 创建时间 */
+    createTime?: string
+    /** 编辑时间 */
+    editTime?: string
+    /** 更新时间 */
+    updateTime?: string
+  }
+
+  type testDownloadFileUsingGETParams = {
+    /** filepath */
+    filepath?: string
+  }
+
+  type uploadPictureUsingPOSTParams = {
+    /** 图片id */
+    id?: number
   }
 
   type UserAddRequest = {
@@ -78,8 +263,6 @@ declare namespace API {
     userProfile?: string
     /** 用户角色：user/admin */
     userRole?: string
-    /** 创建时间 */
-    createTime?: string
   }
 
   type UserLoginRequest = {
