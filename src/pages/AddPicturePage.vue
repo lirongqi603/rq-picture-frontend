@@ -1,0 +1,119 @@
+<template>
+  <div id="addPicturePage">
+    <h2>{{route.query?.id ? '修改图片' : '创建图片'}}</h2>
+    <PictureUpload :picture="picture" :onSuccess="onSuccess"/>
+    <a-form v-if="picture" name="pictureForm" :model="pictureForm" @finish="handleSubmit" layout="vertical">
+      <a-form-item name="name" label="图片名称">
+        <a-input v-model:value="pictureForm.name" placeholder="请输入图片名称" allow-clear/>
+      </a-form-item>
+      <a-form-item name="introduction" label="简介">
+        <a-textarea v-model:value="pictureForm.introduction" :auto-size="{ minRows: 2, maxRows: 5 }"
+                    placeholder="请输入图片简介" allow-clear/>
+      </a-form-item>
+      <a-form-item name="category" label="图片分类">
+        <a-select v-model:value="pictureForm.category" :options="categoryList" allow-clear placeholder="请选择图片分类">
+        </a-select>
+      </a-form-item>
+      <a-form-item name="tags" label="图片标签">
+        <a-select
+          v-model:value="pictureForm.tags"
+          mode="tags"
+          style="width: 100%"
+          placeholder="请选择标签"
+          :options="tagList"
+          allow-clear
+        ></a-select>
+      </a-form-item>
+
+      <a-form-item>
+        <a-button type="primary" html-type="submit" style="width: 100%">{{route.query?.id ? '修改' : '创建'}}</a-button>
+      </a-form-item>
+    </a-form>
+  </div>
+</template>
+
+<script setup lang="ts">
+import PictureUpload from "@/components/PictureUpload.vue";
+import {onMounted, reactive, ref} from "vue";
+import {editPictureUsingPost, getPictureVoByIdUsingGet, listPictureTagCategoryUsingGet} from "@/api/pictureController";
+import {message} from "ant-design-vue";
+import {useRoute, useRouter} from "vue-router";
+
+const picture = ref<API.PictureVo>();
+const pictureForm = reactive<API.PictureEditRequest>({})
+const categoryList = ref<{ value: string; label: string }[]>([])
+const tagList = ref<{ value: string; label: string }[]>([])
+
+const onSuccess = (newPicture: API.PictureVo) => {
+  picture.value = newPicture;
+  pictureForm.name = newPicture.name;
+}
+
+const router = useRouter();
+
+const handleSubmit = async (values: any) => {
+  const pictureId = picture.value?.id;
+  if (!pictureId) {
+    message.error("请先上传图片")
+    return;
+  }
+  const res = await editPictureUsingPost({
+    id: pictureId,
+    ...values
+  });
+  if (res.data.code === 0 && res.data.data) {
+    message.success("创建成功")
+    router.push({
+      path: `/picture/${pictureId}`
+    })
+  } else {
+    message.error("创建失败")
+  }
+}
+
+const getPictureTagCategoryList = async () => {
+  const res = await listPictureTagCategoryUsingGet();
+  if (res.data.code === 0 && res.data.data) {
+    categoryList.value = res.data.data.categoryList?.map(item => ({
+      value: item,
+      label: item
+    })) || []
+
+    tagList.value = res.data.data.tagList?.map(item => ({
+      value: item,
+      label: item
+    })) || []
+  }
+}
+
+const route = useRoute();
+
+const fetchData = async () => {
+  const pictureId = route.query?.id;
+  if (!pictureId) {
+    return;
+  }
+  const res = await getPictureVoByIdUsingGet({id: pictureId});
+  if (res.data.code === 0 && res.data.data) {
+    picture.value = res.data.data;
+    pictureForm.id = res.data.data.id;
+    pictureForm.name = res.data.data.name;
+    pictureForm.introduction = res.data.data.introduction;
+    pictureForm.category = res.data.data.category;
+    pictureForm.tags = res.data.data.tags;
+  }
+}
+
+onMounted(() => {
+  getPictureTagCategoryList();
+  fetchData();
+})
+</script>
+
+<style scoped>
+
+#addPicturePage {
+  max-width: 720px;
+  margin: 0 auto;
+}
+</style>

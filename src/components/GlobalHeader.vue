@@ -79,10 +79,15 @@ const originItems = ref<MenuProps['items']>([
     title: '用户管理',
   },
   {
-    key: '/search',
-    label: h('a', {href: 'http://www.baidu.com', target: '_blank'}, '百度'),
-    title: '百度',
+    key: '/admin/pictureManagePage',
+    label: '图片管理',
+    title: '图片管理',
   },
+  // {
+  //   key: '/search',
+  //   label: h('a', {href: 'http://www.baidu.com', target: '_blank'}, '百度'),
+  //   title: '百度',
+  // },
 ]);
 
 const filterMenu = (menus = [] as MenuProps['items']) => {

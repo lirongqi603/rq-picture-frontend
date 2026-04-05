@@ -1,5 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import HomePage from '@/pages/HomePage.vue'
+import AddPicturePage from '@/pages/AddPicturePage.vue'
+import PictureDetails from '@/pages/PictureDetails.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,6 +10,17 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomePage,
+    },
+    {
+      path: '/add_picture',
+      name: 'addPicture',
+      component: AddPicturePage
+    },
+    {
+      path: '/picture/:id',
+      name: 'pictureDetails',
+      component: PictureDetails,
+      props: true
     },
     {
       path: '/user/login',
@@ -23,6 +36,11 @@ const router = createRouter({
       path: '/admin/userManage',
       name: 'userManage',
       component: () => import('../pages/admin/userManagePage.vue'),
+    },
+    {
+      path: '/admin/pictureManagePage',
+      name: 'pictureManagePage',
+      component: () => import('../pages/admin/pictureManagePage.vue'),
     },
     {
       path: '/about',
