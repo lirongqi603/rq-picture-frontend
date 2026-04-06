@@ -41,6 +41,10 @@
         </a-button>
       </a-form-item>
     </a-form>
+    <a-tabs v-model:activeKey="searchParams.reviewStatus" @change="onTabChange" >
+      <a-tab-pane key="all" tab="全部"></a-tab-pane>
+      <a-tab-pane v-for="status in statusList" :key="status.value" :tab="status.label"></a-tab-pane>
+    </a-tabs>
     <a-table :columns="columns" :data-source="dataList" :pagination="pagination" @change="doTableChange">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'url'">
@@ -48,10 +52,18 @@
         </template>
         <template v-if="column.key === 'imgInfo'">
           <a-space wrap>
-            <div>图片体积：{{ (record.picSize / 1024).toFixed(2) }} KB</div>
+            <div>图片体积：{{formatFileSize(record.picSize)}}</div>
             <div>图片宽高：{{ record.picWidth }} x {{ record.picHeight }}</div>
             <div>图片宽高比例：{{ record.picScale }}</div>
             <div>图片格式：{{ record.picFormat }}</div>
+          </a-space>
+        </template>
+        <template v-if="column.key === 'reviewInfo'">
+          <a-space wrap>
+            <div>审核状态：{{ getReviewStatusText(record.reviewStatus) }}</div>
+            <div>审核意见：{{ record.reviewMessage }}</div>
+            <div>审核人：{{ record.reviewerId }}</div>
+            <div v-if="record.reviewStatus !==  ReviewStatusEnum.PENDING">审核时间：{{ record.reviewTime }}</div>
           </a-space>
         </template>
         <template v-if="column.key === 'tags'">
@@ -63,14 +75,39 @@
         </template>
 
         <template v-else-if="column.key === 'action'">
-          <a-space>
-            <a-button type="primary" @click="openUpdate(record.id)">编辑</a-button>
-            <a-button type="primary" danger @click="doDelete(record.id)">删除</a-button>
+          <a-space wrap>
+            <a-button v-if="record.reviewStatus !==  ReviewStatusEnum.PASS" type="link" @click="doReview(record.id)">
+              审核
+            </a-button>
+            <a-button v-if="record.reviewStatus ===  ReviewStatusEnum.PASS" danger type="link"
+                      @click="doRefuse(record.id)">
+              拒绝
+            </a-button>
+            <a-button type="link" @click="openUpdate(record.id)">编辑</a-button>
+            <a-button type="link" danger @click="doDelete(record.id)">删除</a-button>
           </a-space>
         </template>
       </template>
     </a-table>
-
+    <a-modal v-model:visible="visible" title="审核信息" @ok="handleReview">
+      <a-form
+        layout="horizontal"
+        :model="reviewInfo"
+        style="margin-bottom: 16px"
+      >
+        <a-form-item name="reviewStatus" label="审核状态">
+          <a-radio-group v-model:value="reviewInfo.reviewStatus">
+            <a-radio v-for="status in statusOptions"
+                     :key="status.value" :value="status.value" :label="status.label">
+              {{ status.label }}
+            </a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item name="reviewMessage" label="审核意见">
+          <a-textarea v-model:value="reviewInfo.reviewMessage" placeholder="请输入审核意见" rows="4"/>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 <script lang="ts" setup>
@@ -78,13 +115,17 @@ import {computed, onMounted, reactive, ref} from "vue";
 import {
   deletePictureUsingPost,
   listPagePicturesUsingPost,
-  listPictureTagCategoryUsingGet
+  listPictureTagCategoryUsingGet, reviewPictureUsingPost
 } from "@/api/pictureController";
 import {message} from "ant-design-vue";
 import {SearchOutlined, PlusOutlined, LoadingOutlined} from '@ant-design/icons-vue';
-import type {UploadChangeParam, UploadProps} from 'ant-design-vue';
 import {useRouter} from "vue-router";
-
+import {
+  getReviewStatusText,
+  ReviewStatusEnum,
+  getReviewStatusOptions
+} from "@/utills/ReviewStatus";
+import {formatFileSize} from "@/utills";
 
 const columns = [
   {
@@ -112,6 +153,11 @@ const columns = [
     dataIndex: 'introduction',
     key: 'introduction',
     ellipsis: true,
+  },
+  {
+    title: '审核信息',
+    dataIndex: 'reviewInfo',
+    key: 'reviewInfo',
   },
   {
     title: '图片分类',
@@ -156,6 +202,7 @@ const searchParams = reactive<API.PictureQueryRequest>({
   name: '',
   category: undefined,
   tags: undefined,
+  reviewStatus: undefined
 })
 
 const fetchData = async () => {
@@ -244,6 +291,62 @@ const getPictureTagCategoryList = async () => {
   }
 }
 
+const visible = ref<Boolean>(false);
+const statusOptions = computed(() => {
+  return getReviewStatusOptions().filter(item => item.value !== ReviewStatusEnum.PENDING);
+})
+const reviewInfo = reactive<API.PictureReviewRequest>({
+  id: undefined,
+  reviewStatus: ReviewStatusEnum.PASS,
+  reviewMessage: '',
+})
+
+const resetReviewInfo = () => {
+  reviewInfo.id = undefined;
+  reviewInfo.reviewStatus = ReviewStatusEnum.PASS;
+  reviewInfo.reviewMessage = '';
+}
+
+const doReview = async (id) => {
+  resetReviewInfo()
+  if (!id) {
+    return
+  }
+  visible.value = true;
+  reviewInfo.id = id;
+}
+
+const doRefuse = async (id) => {
+  reviewInfo.id = id;
+  reviewInfo.reviewStatus = ReviewStatusEnum.REFUSE;
+  reviewInfo.reviewMessage = '审核未通过';
+  await handleReview()
+}
+
+const handleReview = async () => {
+  try {
+    const res = await reviewPictureUsingPost(reviewInfo)
+    if (res.data.code === 0) {
+      message.success("审核成功")
+      visible.value = false;
+      await fetchData();
+    } else {
+      message.error("审核失败")
+    }
+  } catch (e) {
+    message.error("审核失败", e)
+  }
+}
+
+
+const statusList = computed(() => {
+  return getReviewStatusOptions();
+})
+
+const onTabChange = (key) => {
+  searchParams.reviewStatus = key === 'all' ? undefined : key;
+  handleSearch();
+}
 
 onMounted(() => {
   fetchData();

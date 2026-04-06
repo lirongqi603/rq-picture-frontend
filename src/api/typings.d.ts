@@ -121,6 +121,10 @@ declare namespace API {
     picScale?: number
     picSize?: number
     picWidth?: number
+    reviewMessage?: string
+    reviewStatus?: number
+    reviewTime?: string
+    reviewerId?: number
     tags?: string
     updateTime?: string
     url?: string
@@ -165,6 +169,29 @@ declare namespace API {
     picScale?: number
     /** 图片格式 */
     picFormat?: string
+    /** 审核状态 */
+    reviewStatus?: number
+    /** 审核信息 */
+    reviewMessage?: string
+    /** 审核人 ID */
+    reviewerId?: number
+    /** 页码 */
+    current?: number
+    /** 每页条数 */
+    pageSize?: number
+    /** 排序字段 */
+    sortField?: string
+    /** 排序规则 */
+    sortOrder?: string
+  }
+
+  type PictureReviewRequest = {
+    /** 图片id */
+    id?: number
+    /** 审核状态 */
+    reviewStatus?: number
+    /** 审核信息 */
+    reviewMessage?: string
     /** 页码 */
     current?: number
     /** 每页条数 */
