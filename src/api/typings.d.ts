@@ -5,6 +5,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseInt_ = {
+    code?: number
+    data?: number
+    message?: string
+  }
+
   type BaseResponseIPageUserQueryListVo_ = {
     code?: number
     data?: IPageUserQueryListVo_
@@ -63,6 +69,21 @@ declare namespace API {
     code?: number
     data?: UserLoginVo
     message?: string
+  }
+
+  type BatchUploadPictureRequest = {
+    /** 搜索内容 */
+    searchText?: string
+    /** 搜索页码 */
+    searchPage?: number
+    /** 搜索数量 */
+    searchNum?: number
+    /** 图片名称前缀 */
+    namePrefix?: string
+    /** 图片类型 */
+    category?: string
+    /** 图片标签 */
+    tagList?: string[]
   }
 
   type DeletedRequest = {
@@ -175,14 +196,14 @@ declare namespace API {
     reviewMessage?: string
     /** 审核人 ID */
     reviewerId?: number
+    /** 排序字段 */
+    sortField?: string
+    /** 排序方式 */
+    sortOrder?: string
     /** 页码 */
     current?: number
     /** 每页条数 */
     pageSize?: number
-    /** 排序字段 */
-    sortField?: string
-    /** 排序规则 */
-    sortOrder?: string
   }
 
   type PictureReviewRequest = {
@@ -252,6 +273,14 @@ declare namespace API {
     editTime?: string
     /** 更新时间 */
     updateTime?: string
+    /** 审核状态：0-待审核; 1-通过; 2-拒绝 */
+    reviewStatus?: number
+    /** 审核信息 */
+    reviewMessage?: string
+    /** 审核人 ID */
+    reviewerId?: number
+    /** 审核时间 */
+    reviewTime?: string
   }
 
   type testDownloadFileUsingGETParams = {
@@ -259,9 +288,24 @@ declare namespace API {
     filepath?: string
   }
 
+  type UploadPictureRequest = {
+    /** id */
+    id?: number
+    /** 图片url */
+    url: string
+  }
+
   type uploadPictureUsingPOSTParams = {
+    /** 图片类型 */
+    category?: string
     /** 图片id */
     id?: number
+    /** 图片名称 */
+    name?: string
+    /** 图片标签 */
+    tagList?: string[]
+    /** 图片地址 */
+    url?: string
   }
 
   type UserAddRequest = {

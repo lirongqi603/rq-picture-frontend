@@ -36,12 +36,16 @@
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="openAdd">
-          <PictureAddOutlined/>
-          新增
+          + 新增
+        </a-button>
+      </a-form-item>
+      <a-form-item>
+        <a-button type="primary" href="/batch_add_picture" target="_blank" ghost>
+          + 批量增加
         </a-button>
       </a-form-item>
     </a-form>
-    <a-tabs v-model:activeKey="searchParams.reviewStatus" @change="onTabChange" >
+    <a-tabs v-model:activeKey="searchParams.reviewStatus" @change="onTabChange">
       <a-tab-pane key="all" tab="全部"></a-tab-pane>
       <a-tab-pane v-for="status in statusList" :key="status.value" :tab="status.label"></a-tab-pane>
     </a-tabs>
@@ -52,7 +56,7 @@
         </template>
         <template v-if="column.key === 'imgInfo'">
           <a-space wrap>
-            <div>图片体积：{{formatFileSize(record.picSize)}}</div>
+            <div>图片体积：{{ formatFileSize(record.picSize) }}</div>
             <div>图片宽高：{{ record.picWidth }} x {{ record.picHeight }}</div>
             <div>图片宽高比例：{{ record.picScale }}</div>
             <div>图片格式：{{ record.picFormat }}</div>

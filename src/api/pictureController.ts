@@ -2,6 +2,21 @@
 /* eslint-disable */
 import request from '@/request'
 
+/** batchUploadPicture POST /api/picture/batchUploadPicture */
+export async function batchUploadPictureUsingPost(
+  body: API.BatchUploadPictureRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseInt_>('/api/picture/batchUploadPicture', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** deletePicture POST /api/picture/delete */
 export async function deletePictureUsingPost(
   body: API.DeletedRequest,
@@ -152,6 +167,21 @@ export async function uploadPictureUsingPost(
     },
     data: formData,
     requestType: 'form',
+    ...(options || {}),
+  })
+}
+
+/** uploadPictureByUrl POST /api/picture/uploadByUrl */
+export async function uploadPictureByUrlUsingPost(
+  body: API.UploadPictureRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponsePictureVo_>('/api/picture/uploadByUrl', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   })
 }
