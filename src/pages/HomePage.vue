@@ -34,7 +34,8 @@
         <a-list-item style="padding: 0">
           <a-card hoverable style="width: 240px;" @click="doClickPicture(picture)">
             <template #cover>
-              <img :alt="picture.name" :src="picture.url" style="height: 180px;object-fit: cover;"/>
+              <img :alt="picture.name" :src="picture.thumbnailUrl ?? picture.url"
+                   style="height: 180px;object-fit: cover;"/>
             </template>
             <a-card-meta :title="picture.name">
               <template #description>

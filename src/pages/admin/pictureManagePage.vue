@@ -52,7 +52,7 @@
     <a-table :columns="columns" :data-source="dataList" :pagination="pagination" @change="doTableChange">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'url'">
-          <a-image :src="record.url" alt="图片" style="height: 50px"/>
+          <a-image :src="record.thumbnailUrl?? record.url" alt="图片" style="height: 50px"/>
         </template>
         <template v-if="column.key === 'imgInfo'">
           <a-space wrap>

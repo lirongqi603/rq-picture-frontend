@@ -147,6 +147,7 @@ declare namespace API {
     reviewTime?: string
     reviewerId?: number
     tags?: string
+    thumbnailUrl?: string
     updateTime?: string
     url?: string
     userId?: number
@@ -281,6 +282,8 @@ declare namespace API {
     reviewerId?: number
     /** 审核时间 */
     reviewTime?: string
+    /** 缩略图 url */
+    thumbnailUrl?: string
   }
 
   type testDownloadFileUsingGETParams = {

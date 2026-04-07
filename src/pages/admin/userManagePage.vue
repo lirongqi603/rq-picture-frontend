@@ -89,7 +89,7 @@
             :with-credentials="true"
             @change="handleChange"
           >
-            <img v-if="imageUrl" :src="imageUrl" alt="avatar" style="width: 100%"/>
+            <img v-if="imageUrl" :src="imageUrl" alt="avatar" style="height: 100px;"/>
             <div v-else>
               <loading-outlined v-if="loading"></loading-outlined>
               <plus-outlined v-else></plus-outlined>

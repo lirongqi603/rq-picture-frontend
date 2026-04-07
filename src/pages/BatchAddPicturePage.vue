@@ -60,7 +60,7 @@ const handleSubmit = async () => {
     ...formData
   });
   if (res.data.code === 0 && res.data.data) {
-    message.success("任务执行成功")
+    message.success("任务执行成功,共" + res.data.data + "条")
     router.push({
       path: `/`
     })
