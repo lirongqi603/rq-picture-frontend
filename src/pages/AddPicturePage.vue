@@ -2,6 +2,10 @@
   <div id="addPicturePage">
     <h2>{{ route.query?.id ? '修改图片' : '创建图片' }}</h2>
 
+    <a-typography-paragraph v-if="picture?.spaceId" type="secondary">
+      保存到空间：<a :href="`/space/${picture.spaceId}`" target="_blank">{{ picture.spaceId }}</a>
+    </a-typography-paragraph>
+
     <a-tabs v-model:activeKey="activeKey">
       <a-tab-pane key="file" tab="文件上传">
         <PictureUpload :picture="picture" :onSuccess="onSuccess"/>
@@ -50,7 +54,7 @@ import {editPictureUsingPost, getPictureVoByIdUsingGet, listPictureTagCategoryUs
 import {message} from "ant-design-vue";
 import {useRoute, useRouter} from "vue-router";
 
-const picture = ref<API.PictureVo>();
+const picture = ref<API.PictureVo>({});
 const pictureForm = reactive<API.PictureEditRequest>({})
 const categoryList = ref<{ value: string; label: string }[]>([])
 const tagList = ref<{ value: string; label: string }[]>([])
@@ -63,7 +67,7 @@ const onSuccess = (newPicture: API.PictureVo) => {
 
 const router = useRouter();
 
-const handleSubmit = async (values: any) => {
+const handleSubmit = async () => {
   const pictureId = picture.value?.id;
   if (!pictureId) {
     message.error("请先上传图片")
@@ -71,7 +75,7 @@ const handleSubmit = async (values: any) => {
   }
   const res = await editPictureUsingPost({
     id: pictureId,
-    ...values
+    ...pictureForm
   });
   if (res.data.code === 0 && res.data.data) {
     message.success("创建成功")
@@ -102,6 +106,10 @@ const route = useRoute();
 
 const fetchData = async () => {
   const pictureId = route.query?.id;
+  const spaceId = route.query?.spaceId;
+  if (spaceId) {
+    picture.value.spaceId = spaceId;
+  }
   if (!pictureId) {
     return;
   }
@@ -113,6 +121,7 @@ const fetchData = async () => {
     pictureForm.introduction = res.data.data.introduction;
     pictureForm.category = res.data.data.category;
     pictureForm.tags = res.data.data.tags;
+    pictureForm.spaceId = res.data.data.spaceId;
   }
 }
 

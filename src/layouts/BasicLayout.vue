@@ -4,9 +4,12 @@
       <a-layout-header class="header">
         <GlobalHeader/>
       </a-layout-header>
-      <a-layout-content class="content">
-        <router-view/>
-      </a-layout-content>
+      <a-layout>
+        <GlobalSider class="sider"/>
+        <a-layout-content class="content">
+          <router-view/>
+        </a-layout-content>
+      </a-layout>
       <a-layout-footer class="footer">
         <a href="#" target="_blank">智能云图库</a>
       </a-layout-footer>
@@ -16,15 +19,26 @@
 <script setup lang="ts">
 
 import GlobalHeader from "@/components/GlobalHeader.vue";
+import GlobalSider from "@/components/GlobalSider.vue";
+import {useLoginUserStore} from "@/stores/useLoginUserStore";
+const loginUserStore = useLoginUserStore()
+
 </script>
 <style scoped>
 #basicLayout .header {
   padding-inline: 20px;
   background: white;
   color: unset;
-  margin-bottom: 16px;
+  margin-bottom: 1px;
 }
 
+#basicLayout .sider {
+  background: #fff;
+  border-right: 0.5px solid #e8e8e8;
+}
+#basicLayout :deep(.ant-menu){
+  border-inline-end: none;
+}
 #basicLayout .content {
   padding: 30px;
   background: linear-gradient(to right, #fff, #efefef);

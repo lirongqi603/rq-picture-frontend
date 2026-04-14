@@ -128,7 +128,7 @@ const canEdit = computed(() => {
     if (!loginUser) {
       return false
     }
-    return loginUser.id === picture.value.user.userId || loginUser.userRole === 'admin'
+    return loginUser.id === picture.value.user.id || loginUser.userRole === 'admin'
   } catch (e) {
     return false
   }

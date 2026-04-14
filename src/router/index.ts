@@ -3,6 +3,10 @@ import HomePage from '@/pages/HomePage.vue'
 import AddPicturePage from '@/pages/AddPicturePage.vue'
 import PictureDetails from '@/pages/PictureDetails.vue'
 import BatchAddPicturePage from '@/pages/BatchAddPicturePage.vue'
+import AddSpacePage from '@/pages/AddSpacePage.vue'
+import AdminUpdateSpacePage from '@/pages/AdminUpdateSpacePage.vue'
+import MySpacePage from '@/pages/MySpacePage.vue'
+import SpaceDetails from '@/pages/SpaceDetails.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,12 +45,38 @@ const router = createRouter({
     {
       path: '/admin/userManage',
       name: 'userManage',
-      component: () => import('../pages/admin/userManagePage.vue'),
+      component: () => import('../pages/admin/UserManagePage.vue'),
     },
     {
       path: '/admin/pictureManagePage',
       name: 'pictureManagePage',
-      component: () => import('../pages/admin/pictureManagePage.vue'),
+      component: () => import('../pages/admin/PictureManagePage.vue'),
+    },
+    {
+      path: '/admin/spaceManagePage',
+      name: 'spaceManagePage',
+      component: () => import('../pages/admin/spaceManagePage.vue'),
+    },
+    {
+      path: '/add_space',
+      name: 'addSpace',
+      component: AddSpacePage
+    },
+    {
+      path: '/admin/update_space',
+      name: 'updateSpace',
+      component: AdminUpdateSpacePage
+    },
+    {
+      path: '/my_space',
+      name: '我的空间',
+      component: MySpacePage,
+    },
+    {
+      path: '/space/:id',
+      name: 'spaceDetails',
+      component: SpaceDetails,
+      props: true
     },
     {
       path: '/about',

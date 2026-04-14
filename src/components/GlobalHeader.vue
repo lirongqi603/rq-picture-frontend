@@ -25,6 +25,10 @@
               </a-space>
               <template #overlay>
                 <a-menu>
+                  <a-menu-item @click="()=>{router.push({path: '/my_space'})}">
+                    <UserOutlined/>
+                    我的空间
+                  </a-menu-item>
                   <a-menu-item @click="doLogout">
                     <LoginOutlined/>
                     退出登录
@@ -44,7 +48,7 @@
 </template>
 <script setup lang="ts">
 import {computed, h, ref} from 'vue';
-import {HomeOutlined, DownOutlined, LoginOutlined} from '@ant-design/icons-vue';
+import {HomeOutlined, DownOutlined, LoginOutlined, UserOutlined} from '@ant-design/icons-vue';
 import {MenuProps, message} from 'ant-design-vue';
 import {useRouter} from "vue-router";
 import {useLoginUserStore} from "@/stores/useLoginUserStore";
@@ -74,14 +78,24 @@ const originItems = ref<MenuProps['items']>([
     title: '主页',
   },
   {
-    key: '/admin/userManage',
-    label: '用户管理',
-    title: '用户管理',
+    key: '/add_picture',
+    label: '创建图片',
+    title: '创建图片',
   },
   {
     key: '/admin/pictureManagePage',
     label: '图片管理',
     title: '图片管理',
+  },
+  {
+    key: '/admin/userManage',
+    label: '用户管理',
+    title: '用户管理',
+  },
+  {
+    key: '/admin/spaceManagePage',
+    label: '空间管理',
+    title: '空间管理',
   },
   // {
   //   key: '/search',
@@ -96,11 +110,13 @@ const filterMenu = (menus = [] as MenuProps['items']) => {
   }
 
   return menus?.filter((item) => {
+    const loginUser = loginUserStore.loginUser;
     if (item.key.startsWith("/admin")) {
-      const loginUser = loginUserStore.loginUser;
       if (!loginUser || loginUser.userRole !== "admin") {
         return false
       }
+    } else if (item.key != '/' && !loginUser.id) {
+      return false
     }
     return true
   })

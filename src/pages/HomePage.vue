@@ -28,27 +28,9 @@
         </template>
       </div>
     </div>
-    <a-list :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }" :data-source="data"
-            :pagination="pagination" :loading="loading">
-      <template #renderItem="{ item : picture}">
-        <a-list-item style="padding: 0">
-          <a-card hoverable style="width: 240px;" @click="doClickPicture(picture)">
-            <template #cover>
-              <img :alt="picture.name" :src="picture.thumbnailUrl ?? picture.url"
-                   style="height: 180px;object-fit: cover;"/>
-            </template>
-            <a-card-meta :title="picture.name">
-              <template #description>
-                <a-flex>
-                  <a-tag color="green">{{ picture.category ? picture.category : '默认' }}</a-tag>
-                  <a-tag v-for="tag in picture.tags" :key="tag">{{ tag }}</a-tag>
-                </a-flex>
-              </template>
-            </a-card-meta>
-          </a-card>
-        </a-list-item>
-      </template>
-    </a-list>
+    <PictureList :data-list="data" :loading="loading"/>
+    <a-pagination style="text-align: right" v-model:current="searchParams.current"
+                   v-model:page-size="searchParams.pageSize" :total="total" :onChange="paginationChange"/>
   </div>
 </template>
 
@@ -56,6 +38,7 @@
 import {computed, onMounted, reactive, ref} from "vue";
 import {listPagePictureVosUsingPost, listPictureTagCategoryUsingGet} from "@/api/pictureController";
 import {useRouter} from "vue-router";
+import PictureList from "@/components/PictureList.vue";
 
 const data = ref<API.PictureVo[]>([])
 const total = ref(0);
@@ -87,18 +70,11 @@ const fetchData = async () => {
   loading.value = false;
 }
 
-const pagination = computed(() => {
-  return {
-    current: searchParams.current,
-    pageSize: searchParams.pageSize,
-    total: total.value,
-    onChange: (page: number, pageSize: number) => {
-      searchParams.current = page;
-      searchParams.pageSize = pageSize;
-      fetchData();
-    }
-  }
-})
+const paginationChange = (page: number, pageSize: number) => {
+  searchParams.current = page;
+  searchParams.pageSize = pageSize;
+  fetchData();
+}
 
 const getPictureTagCategoryList = async () => {
   const res = await listPictureTagCategoryUsingGet();

@@ -7,7 +7,7 @@
 import {saveAs} from "file-saver";
 
 function formatFileSize(bytes, decimals = 2) {
-  if (bytes === 0) return '0 B';
+  if (bytes === 0 || bytes == '0') return '0 B';
   if (bytes < 0) return 'Invalid size';
 
   const k = 1024;

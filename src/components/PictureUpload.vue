@@ -35,7 +35,7 @@ const loading = ref<boolean>(false);
 const handleUpload = async ({file}: any) => {
   loading.value = true;
   try {
-    const param = props.picture ? {id: props.picture.id} : {}
+    const param: API.UploadPictureRequest = props.picture ? {id: props.picture.id, spaceId: props.picture.spaceId} : {}
     const res = await uploadPictureUsingPost(param, {}, file);
     if (res.data.code === 0 && res.data.data) {
       message.success("上传成功")
@@ -45,7 +45,7 @@ const handleUpload = async ({file}: any) => {
     }
   } catch (e) {
     message.error("上传失败", e)
-  }finally {
+  } finally {
     loading.value = false;
   }
 
@@ -63,7 +63,6 @@ const beforeUpload = (file: UploadProps ['fileList'][number]) => {
   }
   return isJpgOrPng && isLt2M;
 };
-
 
 
 </script>
