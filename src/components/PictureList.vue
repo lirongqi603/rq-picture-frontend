@@ -1,5 +1,5 @@
 <template>
-  <div id="picture">
+  <div class="pictureList">
     <a-list :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }" :data-source="dataList"
             :loading="loading">
       <template #renderItem="{ item : picture}">
@@ -18,30 +18,26 @@
               </template>
             </a-card-meta>
             <template #actions v-if="props.operate">
-              <a-space>
-                <a-button type="link" @click="e=>editHandle(e,picture)">
-                  <EditOutlined/>
-                  编辑
-                </a-button>
-                <a-button type="link" danger @click="e=>deleteHandle(e,picture)">
-                  <DeleteOutlined/>
-                  删除
-                </a-button>
-              </a-space>
+              <ShareAltOutlined @click="e=>shareHandle(e,picture)"/>
+              <EditOutlined @click="e=>editHandle(e,picture)"/>
+              <DeleteOutlined @click="e=>deleteHandle(e,picture)"/>
             </template>
           </a-card>
         </a-list-item>
       </template>
     </a-list>
+    <SharePicture ref="share" :url="shareUrl"/>
   </div>
 </template>
 
 <script setup lang="ts">
 
-import {EditOutlined, DeleteOutlined} from '@ant-design/icons-vue';
+import {EditOutlined, DeleteOutlined, ShareAltOutlined} from '@ant-design/icons-vue';
 import {useRouter} from "vue-router";
 import {deletePictureUsingPost} from "@/api/pictureController";
 import {message} from "ant-design-vue";
+import SharePicture from "@/components/SharePicture.vue";
+import {ref} from "vue";
 
 interface Props {
   dataList: API.PictureVo[],
@@ -56,7 +52,6 @@ const props = withDefaults<Props>(
     dataList: () => [],
     loading: false,
     operate: false,
-    onReload: () => {}
   }
 );
 
@@ -66,7 +61,13 @@ const doClickPicture = (picture: API.PictureVo) => {
     path: `/picture/${picture.id}`
   })
 }
-
+const shareUrl = ref<string>();
+const share = ref<any>();
+const shareHandle = (e, picture: API.PictureVo) => {
+  e.stopPropagation();
+  shareUrl.value = `${window.location.protocol}//:${window.location.host}/picture/${picture.id}`
+  share.value.openModel?.()
+}
 const editHandle = (e, picture: API.PictureVo) => {
   e.stopPropagation();
   router.push({
@@ -82,7 +83,7 @@ const deleteHandle = async (e, picture: API.PictureVo) => {
     const res = await deletePictureUsingPost({id: picture.id});
     if (res.data.code === 0) {
       message.success("删除成功")
-      props?.onReload();
+      props?.onReload?.();
     } else {
       message.success("删除失败")
     }

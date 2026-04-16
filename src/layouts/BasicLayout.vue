@@ -41,7 +41,7 @@ const loginUserStore = useLoginUserStore()
 }
 #basicLayout .content {
   padding: 30px;
-  background: linear-gradient(to right, #fff, #efefef);
+  background: #fff;
   margin-bottom: 30px;
 }
 

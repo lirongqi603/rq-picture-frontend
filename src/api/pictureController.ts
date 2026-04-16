@@ -2,6 +2,21 @@
 /* eslint-disable */
 import request from '@/request'
 
+/** batchUpdatePicture POST /api/picture/batchUpdatePicture */
+export async function batchUpdatePictureUsingPost(
+  body: API.BatchUpdatePictureRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseInt_>('/api/picture/batchUpdatePicture', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** batchUploadPicture POST /api/picture/batchUploadPicture */
 export async function batchUploadPictureUsingPost(
   body: API.BatchUploadPictureRequest,
@@ -98,6 +113,21 @@ export async function reviewPictureUsingPost(
   options?: { [key: string]: any }
 ) {
   return request<API.BaseResponseBoolean_>('/api/picture/reviewPicture', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** searchPictureListByColor POST /api/picture/search/color */
+export async function searchPictureListByColorUsingPost(
+  body: API.PictureQueryRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListPictureVo_>('/api/picture/search/color', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

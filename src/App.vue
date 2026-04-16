@@ -13,6 +13,9 @@ import {onMounted, ref} from 'vue';
 // 定义响应式数据
 const locale = ref(zhCN);
 
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';   // 引入中文语言包
+dayjs.locale('zh-cn');
 </script>
 
 <style scoped>

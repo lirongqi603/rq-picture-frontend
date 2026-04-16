@@ -17,6 +17,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseListPictureVo_ = {
+    code?: number
+    data?: PictureVo[]
+    message?: string
+  }
+
   type BaseResponseListSpaceLevelVo_ = {
     code?: number
     data?: SpaceLevelVo[]
@@ -99,6 +105,14 @@ declare namespace API {
     code?: number
     data?: UserLoginVo
     message?: string
+  }
+
+  type BatchUpdatePictureRequest = {
+    category?: string
+    nameFormat?: string
+    pictureIdList?: number[]
+    spaceId?: number
+    tagList?: string[]
   }
 
   type BatchUploadPictureRequest = {
@@ -193,6 +207,7 @@ declare namespace API {
     introduction?: string
     isDelete?: number
     name?: string
+    picColor?: string
     picFormat?: string
     picHeight?: number
     picScale?: number
@@ -226,7 +241,6 @@ declare namespace API {
   }
 
   type PictureQueryRequest = {
-    isPublic?: boolean
     /** 图片id */
     id?: number
     /** 图片名称 */
@@ -259,6 +273,14 @@ declare namespace API {
     reviewerId?: number
     /** 空间 ID */
     spaceId?: number
+    /** 是否进查询公共图库 */
+    isPublic?: boolean
+    /** 编辑开始时间 */
+    editStartTime?: string
+    /** 编辑结束时间 */
+    editEndTime?: string
+    /** 图片主色调 */
+    picColor?: string
     /** 页码 */
     current?: number
     /** 每页条数 */
@@ -348,6 +370,8 @@ declare namespace API {
     thumbnailUrl?: string
     /** 空间ID */
     spaceId?: number
+    /** 相似度 */
+    similarity?: number
   }
 
   type Space = {
