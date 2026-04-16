@@ -32,7 +32,31 @@ function downloadFile(url, fileName) {
   saveAs(url, fileName);
 }
 
+function toHexColor(input: string | undefined | null): string {
+  // 防御：输入无效时返回默认颜色
+  if (!input) {
+    return undefined;
+  }
+
+  // 去掉 0x 前缀（也处理可能带 # 的情况，根据你的数据格式调整）
+  let colorValue = input.startsWith('0x') ? input.slice(2) : input;
+  if (colorValue.startsWith('#')) {
+    colorValue = colorValue.slice(1);
+  }
+
+  // 转换为数字，再转回十六进制，补足6位
+  const hexNum = parseInt(colorValue, 16);
+  if (isNaN(hexNum)) {
+    return '#000000'; // 无效十六进制字符串时返回默认颜色
+  }
+
+  const hexColor = hexNum.toString(16).padStart(6, '0');
+  return `#${hexColor}`;
+}
+
+
 export {
+  toHexColor,
   formatFileSize,
   downloadFile
 }

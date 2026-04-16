@@ -5,6 +5,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseCreateTaskResponse_ = {
+    code?: number
+    data?: CreateTaskResponse
+    message?: string
+  }
+
   type BaseResponseInt_ = {
     code?: number
     data?: number
@@ -77,6 +83,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseQueryTaskResponse_ = {
+    code?: number
+    data?: QueryTaskResponse
+    message?: string
+  }
+
   type BaseResponseSpace_ = {
     code?: number
     data?: Space
@@ -130,8 +142,26 @@ declare namespace API {
     tagList?: string[]
   }
 
+  type CreateTaskRequest = {
+    input?: Input
+    model?: string
+    parameters?: Parameters
+  }
+
+  type CreateTaskResponse = {
+    code?: string
+    message?: string
+    output?: Output
+    request_id?: string
+  }
+
   type DeletedRequest = {
     id?: number
+  }
+
+  type getAiTaskProgressUsingGETParams = {
+    /** taskId */
+    taskId: string
   }
 
   type getInfoUsingGETParams = {
@@ -159,12 +189,30 @@ declare namespace API {
     id?: number
   }
 
+  type Input = {
+    image_url?: string
+  }
+
   type IPageUserQueryListVo_ = {
     current?: number
     pages?: number
     records?: UserQueryListVo[]
     size?: number
     total?: number
+  }
+
+  type Output = {
+    task_id?: string
+    task_status?: string
+  }
+
+  type Output1 = {
+    end_time?: string
+    output_image_url?: string
+    submit_time?: string
+    task_id?: string
+    task_metrics?: TaskMetrics
+    task_status?: string
   }
 
   type PagePicture_ = {
@@ -197,6 +245,19 @@ declare namespace API {
     records?: SpaceVo[]
     size?: number
     total?: number
+  }
+
+  type Parameters = {
+    angle?: number
+    best_quality?: boolean
+    bottom_offset?: number
+    left_offset?: number
+    limit_image_size?: boolean
+    output_ratio?: string
+    right_offset?: number
+    top_offset?: number
+    xScale?: number
+    yScale?: number
   }
 
   type Picture = {
@@ -374,6 +435,13 @@ declare namespace API {
     similarity?: number
   }
 
+  type QueryTaskResponse = {
+    code?: string
+    message?: string
+    output?: Output1
+    request_id?: string
+  }
+
   type Space = {
     createTime?: string
     editTime?: string
@@ -480,6 +548,12 @@ declare namespace API {
     /** 更新时间 */
     updateTime?: string
     userVo?: UserInfoVo
+  }
+
+  type TaskMetrics = {
+    failed?: number
+    succeeded?: number
+    total?: number
   }
 
   type testDownloadFileUsingGETParams = {

@@ -14,8 +14,16 @@
         <UrlUpload :picture="picture" :onSuccess="onSuccess"/>
       </a-tab-pane>
     </a-tabs>
-
-
+    <a-flex gap="middle" align="center" justify="center" style="margin: 16px 0 16px 0">
+      <a-button type="primary" ghost @click="openEdit">
+        <EditOutlined/>
+        编辑图片
+      </a-button>
+      <a-button type="primary" @click="openOutPaintPicture">
+        <FullscreenOutlined/>
+        AI扩图
+      </a-button>
+    </a-flex>
     <a-form v-if="picture" name="pictureForm" :model="pictureForm" @finish="handleSubmit" layout="vertical">
       <a-form-item name="name" label="图片名称">
         <a-input v-model:value="pictureForm.name" placeholder="请输入图片名称" allow-clear/>
@@ -43,13 +51,18 @@
         <a-button type="primary" html-type="submit" style="width: 100%">{{ route.query?.id ? '修改' : '创建' }}</a-button>
       </a-form-item>
     </a-form>
+    <EditPicture ref="editPicture" :picture="picture" :onSuccess="editPictureSuccess"/>
+    <OutPaintingPicture ref="outPaintPicture" :picture="picture" :onSuccess="outPaintPictureSuccess"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import PictureUpload from "@/components/PictureUpload.vue";
 import UrlUpload from "@/components/UrlUpload.vue";
+import EditPicture from "@/components/EditPicture.vue";
+import OutPaintingPicture from "@/components/OutPaintingPicture.vue";
 import {onMounted, reactive, ref} from "vue";
+import {EditOutlined, FullscreenOutlined} from '@ant-design/icons-vue';
 import {editPictureUsingPost, getPictureVoByIdUsingGet, listPictureTagCategoryUsingGet} from "@/api/pictureController";
 import {message} from "ant-design-vue";
 import {useRoute, useRouter} from "vue-router";
@@ -123,6 +136,22 @@ const fetchData = async () => {
     pictureForm.tags = res.data.data.tags;
     pictureForm.spaceId = res.data.data.spaceId;
   }
+}
+
+const editPicture = ref<any>()
+const openEdit = () => {
+  editPicture.value.openModel()
+}
+const editPictureSuccess = (newPicture: API.PictureVo) => {
+  picture.value = newPicture;
+}
+
+const outPaintPicture = ref<any>()
+const openOutPaintPicture = () => {
+  outPaintPicture.value.openModel()
+}
+const outPaintPictureSuccess = (newPicture: API.PictureVo) => {
+  picture.value = newPicture;
 }
 
 onMounted(() => {

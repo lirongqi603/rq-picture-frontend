@@ -10,7 +10,7 @@
           + 批量编辑图片
         </a-button>
         <a-tooltip placement="top" :title="'空间使用情况：'+(space.totalSize??0)+'/'+space.maxSize">
-          <a-progress type="circle" :percent="((space.totalSize??0)/space.maxSize).toFixed(1)" :size="45"/>
+          <a-progress type="circle" :percent="((space.totalSize??0)/space.maxSize * 100).toFixed(1)" :size="45"/>
         </a-tooltip>
       </a-space>
     </a-flex>

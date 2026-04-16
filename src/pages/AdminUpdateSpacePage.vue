@@ -106,7 +106,6 @@ const fetchData = async () => {
 }
 
 const spaceLevelChange = () => {
-  debugger
   const spaceLevel = spaceLevelList.value.find(item => item.value === spaceForm.spaceLevel);
   if (spaceLevel) {
     spaceForm.maxSize = spaceLevel.maxSize;

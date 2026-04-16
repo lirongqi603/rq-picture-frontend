@@ -32,6 +32,21 @@ export async function batchUploadPictureUsingPost(
   })
 }
 
+/** createAiTask POST /api/picture/createAiTask */
+export async function createAiTaskUsingPost(
+  body: API.CreateTaskRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseCreateTaskResponse_>('/api/picture/createAiTask', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** deletePicture POST /api/picture/delete */
 export async function deletePictureUsingPost(
   body: API.DeletedRequest,
@@ -54,6 +69,21 @@ export async function getPictureByIdUsingGet(
   options?: { [key: string]: any }
 ) {
   return request<API.BaseResponsePicture_>('/api/picture/get', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  })
+}
+
+/** getAiTaskProgress GET /api/picture/getAiTaskProgress */
+export async function getAiTaskProgressUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getAiTaskProgressUsingGETParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseQueryTaskResponse_>('/api/picture/getAiTaskProgress', {
     method: 'GET',
     params: {
       ...params,

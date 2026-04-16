@@ -28,6 +28,16 @@
             <a-descriptions-item label="宽度*高度"> {{ picture.picWidth }} X {{ picture.picHeight }}</a-descriptions-item>
             <a-descriptions-item label="宽高比"> {{ picture.picScale }}</a-descriptions-item>
             <a-descriptions-item label="图片大小"> {{ formatFileSize(picture.picSize) }}</a-descriptions-item>
+            <a-descriptions-item label="主色调">
+              <a-space>
+                {{ toHexColor(picture.picColor) ?? '-' }}
+                <div v-if="picture.picColor" :style="{
+                  width: '48px',
+                  height: '24px',
+                  backgroundColor: toHexColor(picture.picColor)
+                }"></div>
+              </a-space>
+            </a-descriptions-item>
           </a-descriptions>
           <a-space wrap>
             <a-button v-if="canEdit" type="primary" :size="16" @click="updatePicture(picture.id)">
@@ -69,6 +79,7 @@ import {downloadFile, formatFileSize} from "@/utills";
 import {useRouter} from "vue-router";
 import {DeleteOutlined, EditOutlined, StepBackwardOutlined, DownloadOutlined} from '@ant-design/icons-vue'
 import {useLoginUserStore} from "@/stores/useLoginUserStore";
+import {toHexColor} from "@/utills";
 
 interface Props {
   id: string | number;
