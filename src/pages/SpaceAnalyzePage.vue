@@ -6,7 +6,6 @@
       <span v-else-if="isPublic">公共图库</span>
       <span v-else>私有图库：<a :href="'/space/'+spaceId" target="_blank">{{ spaceId }}</a></span>
     </h2>
-    <div>父组件 isAll 值：{{ isAll }}</div>
     <SpaceUsageAnalyze :isAll="isAll" :isPublic="isPublic" :spaceId="spaceId"/>
     <a-row :gutter="[16,16]">
       <a-col :xs="24" :md="12">
