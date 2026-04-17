@@ -14,7 +14,7 @@
         <UrlUpload :picture="picture" :onSuccess="onSuccess"/>
       </a-tab-pane>
     </a-tabs>
-    <a-flex gap="middle" align="center" justify="center" style="margin: 16px 0 16px 0">
+    <a-flex gap="middle" align="center" justify="center" style="margin: 16px 0 16px 0" v-if="picture.url">
       <a-button type="primary" ghost @click="openEdit">
         <EditOutlined/>
         编辑图片

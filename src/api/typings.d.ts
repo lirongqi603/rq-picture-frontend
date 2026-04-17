@@ -29,9 +29,39 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseListSpace_ = {
+    code?: number
+    data?: Space[]
+    message?: string
+  }
+
+  type BaseResponseListSpaceCategoryAnalyzeResponse_ = {
+    code?: number
+    data?: SpaceCategoryAnalyzeResponse[]
+    message?: string
+  }
+
   type BaseResponseListSpaceLevelVo_ = {
     code?: number
     data?: SpaceLevelVo[]
+    message?: string
+  }
+
+  type BaseResponseListSpaceSizeAnalyzeResponse_ = {
+    code?: number
+    data?: SpaceSizeAnalyzeResponse[]
+    message?: string
+  }
+
+  type BaseResponseListSpaceTagAnalyzeResponse_ = {
+    code?: number
+    data?: SpaceTagAnalyzeResponse[]
+    message?: string
+  }
+
+  type BaseResponseListSpaceUserAnalyzeResponse_ = {
+    code?: number
+    data?: SpaceUserAnalyzeResponse[]
     message?: string
   }
 
@@ -92,6 +122,12 @@ declare namespace API {
   type BaseResponseSpace_ = {
     code?: number
     data?: Space
+    message?: string
+  }
+
+  type BaseResponseSpaceUsageAnalyzeResponse_ = {
+    code?: number
+    data?: SpaceUsageAnalyzeResponse
     message?: string
   }
 
@@ -433,6 +469,8 @@ declare namespace API {
     spaceId?: number
     /** 相似度 */
     similarity?: number
+    /** 主色调 */
+    picColor?: string
   }
 
   type QueryTaskResponse = {
@@ -466,6 +504,21 @@ declare namespace API {
     maxSize?: number
     /** 空间图片的最大数量 */
     maxCount?: number
+  }
+
+  type SpaceCategoryAnalyzeRequest = {
+    /** 空间id */
+    spaceId?: number
+    /** 是否查询全部 */
+    isAll?: boolean
+    /** 是否查询公共图库 */
+    isPublic?: boolean
+  }
+
+  type SpaceCategoryAnalyzeResponse = {
+    category?: string
+    count?: number
+    totalSize?: number
   }
 
   type SpaceEditRequest = {
@@ -511,6 +564,38 @@ declare namespace API {
     sortOrder?: string
   }
 
+  type SpaceRankAnalyzeRequest = {
+    topN?: number
+  }
+
+  type SpaceSizeAnalyzeRequest = {
+    /** 空间id */
+    spaceId?: number
+    /** 是否查询全部 */
+    isAll?: boolean
+    /** 是否查询公共图库 */
+    isPublic?: boolean
+  }
+
+  type SpaceSizeAnalyzeResponse = {
+    count?: number
+    sizeRange?: string
+  }
+
+  type SpaceTagAnalyzeRequest = {
+    /** 空间id */
+    spaceId?: number
+    /** 是否查询全部 */
+    isAll?: boolean
+    /** 是否查询公共图库 */
+    isPublic?: boolean
+  }
+
+  type SpaceTagAnalyzeResponse = {
+    count?: number
+    tag?: string
+  }
+
   type SpaceUpdateRequest = {
     /** id */
     id?: number
@@ -522,6 +607,40 @@ declare namespace API {
     maxSize?: number
     /** 空间图片的最大数量 */
     maxCount?: number
+  }
+
+  type SpaceUsageAnalyzeRequest = {
+    /** 空间id */
+    spaceId?: number
+    /** 是否查询全部 */
+    isAll?: boolean
+    /** 是否查询公共图库 */
+    isPublic?: boolean
+  }
+
+  type SpaceUsageAnalyzeResponse = {
+    countUsageRatio?: number
+    maxCount?: number
+    maxSize?: number
+    sizeUsageRatio?: number
+    usedCount?: number
+    usedSize?: number
+  }
+
+  type SpaceUserAnalyzeRequest = {
+    timeDimension?: string
+    userId?: number
+    /** 空间id */
+    spaceId?: number
+    /** 是否查询全部 */
+    isAll?: boolean
+    /** 是否查询公共图库 */
+    isPublic?: boolean
+  }
+
+  type SpaceUserAnalyzeResponse = {
+    count?: number
+    period?: string
   }
 
   type SpaceVo = {

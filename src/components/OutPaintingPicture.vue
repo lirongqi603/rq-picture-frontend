@@ -1,13 +1,13 @@
 <template>
-  <a-modal title="AI扩图" v-model:visible="visible" :footer="false">
+  <a-modal title="AI扩图" v-model:visible="visible" :footer="false" width="800px">
     <a-row :gutter="[16 , 16]">
       <a-col :span="12">
         <h4>原图信息</h4>
-        <img style="height: 200px;max-width: 100%;" :src="props.picture.url" :alt="props.picture.name">
+        <img style="height: 300px;max-width: 100%;" :src="props.picture.url" :alt="props.picture.name">
       </a-col>
       <a-col :span="12">
         <h4>扩图信息</h4>
-        <img v-if="imgUrl" style="height: 200px;max-width: 100%;" :src="imgUrl" :alt="props.picture.name">
+        <img v-if="imgUrl" style="height: 300px;max-width: 100%;" :src="imgUrl" :alt="props.picture.name">
       </a-col>
     </a-row>
     <div class="operatePic">

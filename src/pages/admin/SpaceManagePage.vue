@@ -1,5 +1,18 @@
 <template>
   <div id="spaceManagePage">
+    <a-flex justify="space-between" style="margin-bottom: 16px">
+      <h2>空间管理</h2>
+      <a-space>
+        <a-button type="primary" :href="`/space_analyze?isAll=1`" target="_blank">
+          <BarChartOutlined/>
+          全部图库分析
+        </a-button>
+        <a-button type="primary" ghost :href="`/space_analyze?isPublic=1`" target="_blank">
+          <BarChartOutlined/>
+          公共图库分析
+        </a-button>
+      </a-space>
+    </a-flex>
     <a-form
       layout="inline"
       :model="searchParams"
@@ -39,6 +52,7 @@
         </template>
         <template v-else-if="column.key === 'action'">
           <a-space wrap>
+            <a-button type="link" :href="`/space_analyze?spaceId=${record.id}`" target="_blank">分析</a-button>
             <a-button type="link" @click="openUpdate(record.id)">编辑</a-button>
             <a-button type="link" danger @click="doDelete(record.id)">删除</a-button>
           </a-space>
@@ -53,7 +67,7 @@ import {
   deleteSpaceUsingPost, getSpaceLevelUsingGet, listPageUsingPost,
 } from "@/api/spaceController";
 import {message} from "ant-design-vue";
-import {SearchOutlined, PlusOutlined, LoadingOutlined} from '@ant-design/icons-vue';
+import {SearchOutlined, PlusOutlined, LoadingOutlined, BarChartOutlined} from '@ant-design/icons-vue';
 import {useRouter} from "vue-router";
 import {formatFileSize} from "@/utills";
 import {getSpaceLevelText} from "@/utills/SpaceLevel";

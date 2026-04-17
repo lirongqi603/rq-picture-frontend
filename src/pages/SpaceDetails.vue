@@ -7,7 +7,12 @@
           + 创建图片
         </a-button>
         <a-button type="primary" ghost @click="openBatchUpdate">
-          + 批量编辑图片
+          <EditOutlined/>
+          批量编辑图片
+        </a-button>
+        <a-button :href="`/space_analyze?spaceId=${space.id}`" target="_blank">
+          <BarChartOutlined/>
+          空间图库分析
         </a-button>
         <a-tooltip placement="top" :title="'空间使用情况：'+(space.totalSize??0)+'/'+space.maxSize">
           <a-progress type="circle" :percent="((space.totalSize??0)/space.maxSize * 100).toFixed(1)" :size="45"/>
@@ -38,6 +43,8 @@ import {listPagePictureVosUsingPost, searchPictureListByColorUsingPost} from "@/
 import {useRouter} from "vue-router";
 import {ColorPicker} from "vue3-colorpicker";
 import "vue3-colorpicker/style.css";
+
+import {BarChartOutlined, EditOutlined} from '@ant-design/icons-vue'
 
 
 interface Props {
