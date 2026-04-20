@@ -96,7 +96,7 @@ const handleSubmit = async () => {
       path: `/picture/${pictureId}`
     })
   } else {
-    message.error("创建失败")
+    message.error("创建失败："+res.data.message)
   }
 }
 

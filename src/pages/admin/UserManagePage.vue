@@ -89,7 +89,7 @@
             :with-credentials="true"
             @change="handleChange"
           >
-            <img v-if="imageUrl" :src="imageUrl" alt="avatar" style="height: 100px;"/>
+            <img v-if="imageUrl" :src="imageUrl" alt="avatar" style="height: 100px;max-width: 100%"/>
             <div v-else>
               <loading-outlined v-if="loading"></loading-outlined>
               <plus-outlined v-else></plus-outlined>
@@ -209,7 +209,7 @@ const doDelete = async (key) => {
       message.success("删除成功")
       await fetchData()
     } else {
-      message.success("删除失败")
+      message.error("删除失败:"+ res.data.message)
     }
   } catch (e) {
     message.success("删除失败", e)

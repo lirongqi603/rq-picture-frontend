@@ -65,6 +65,18 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseListSpaceUserVo_ = {
+    code?: number
+    data?: SpaceUserVo[]
+    message?: string
+  }
+
+  type BaseResponseListSpaceVo_ = {
+    code?: number
+    data?: SpaceVo[]
+    message?: string
+  }
+
   type BaseResponseLong_ = {
     code?: number
     data?: number
@@ -471,6 +483,8 @@ declare namespace API {
     similarity?: number
     /** 主色调 */
     picColor?: string
+    /** 权限列表 */
+    permissionList?: string[]
   }
 
   type QueryTaskResponse = {
@@ -489,6 +503,7 @@ declare namespace API {
     maxSize?: number
     spaceLevel?: number
     spaceName?: string
+    spaceType?: number
     totalCount?: number
     totalSize?: number
     updateTime?: string
@@ -504,6 +519,8 @@ declare namespace API {
     maxSize?: number
     /** 空间图片的最大数量 */
     maxCount?: number
+    /** 空间类型 */
+    spaceType?: number
   }
 
   type SpaceCategoryAnalyzeRequest = {
@@ -554,6 +571,8 @@ declare namespace API {
     totalCount?: number
     /** 创建用户 id */
     userId?: number
+    /** 空间类型 */
+    spaceType?: number
     /** 页码 */
     current?: number
     /** 每页条数 */
@@ -566,6 +585,12 @@ declare namespace API {
 
   type SpaceRankAnalyzeRequest = {
     topN?: number
+    /** 空间id */
+    spaceId?: number
+    /** 是否查询全部 */
+    isAll?: boolean
+    /** 是否查询公共图库 */
+    isPublic?: boolean
   }
 
   type SpaceSizeAnalyzeRequest = {
@@ -627,6 +652,12 @@ declare namespace API {
     usedSize?: number
   }
 
+  type SpaceUserAddRequest = {
+    spaceId?: number
+    spaceRole?: string
+    userId?: number
+  }
+
   type SpaceUserAnalyzeRequest = {
     timeDimension?: string
     userId?: number
@@ -641,6 +672,27 @@ declare namespace API {
   type SpaceUserAnalyzeResponse = {
     count?: number
     period?: string
+  }
+
+  type SpaceUserEditRequest = {
+    id?: number
+    spaceRole?: string
+  }
+
+  type SpaceUserQueryRequest = {
+    id?: number
+    spaceId?: number
+    spaceRole?: string
+  }
+
+  type SpaceUserVo = {
+    createTime?: string
+    id?: number
+    space?: SpaceVo
+    spaceId?: number
+    spaceRole?: string
+    user?: UserInfoVo
+    userId?: number
   }
 
   type SpaceVo = {
@@ -667,6 +719,10 @@ declare namespace API {
     /** 更新时间 */
     updateTime?: string
     userVo?: UserInfoVo
+    /** 空间类型：0-私有 1-团队 */
+    spaceType?: number
+    /** 权限列表 */
+    permissionList?: string[]
   }
 
   type TaskMetrics = {

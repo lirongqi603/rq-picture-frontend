@@ -46,7 +46,7 @@
               </template>
               编辑
             </a-button>
-            <a-button v-if="canEdit" danger :size="16" @click="deletePicture(picture.id)">
+            <a-button v-if="canDelete" danger :size="16" @click="deletePicture(picture.id)">
               <template #icon>
                 <DeleteOutlined/>
               </template>
@@ -80,6 +80,7 @@ import {useRouter} from "vue-router";
 import {DeleteOutlined, EditOutlined, StepBackwardOutlined, DownloadOutlined} from '@ant-design/icons-vue'
 import {useLoginUserStore} from "@/stores/useLoginUserStore";
 import {toHexColor} from "@/utills";
+import {SPACE_PERMISSION_ENUM} from "@/utills/SpaceType";
 
 interface Props {
   id: string | number;
@@ -94,7 +95,7 @@ const fetchData = async () => {
     if (res.data.code === 0 && res.data.data) {
       picture.value = res.data.data;
     } else {
-      message.error("获取图片失败")
+      message.error("获取图片失败："+res.data.message)
     }
   } catch (e) {
     message.error("获取图片失败", e)
@@ -118,7 +119,7 @@ const deletePicture = async (id: string | number) => {
     message.success("删除成功")
     goBack();
   } else {
-    message.error("删除失败")
+    message.error("删除失败:"+ res.data.message)
   }
 }
 
@@ -132,18 +133,6 @@ const updatePicture = (id: string | number) => {
 }
 
 //权限校验
-const canEdit = computed(() => {
-  try {
-    const loginUserStore = useLoginUserStore()
-    const loginUser = loginUserStore?.loginUser ?? {}
-    if (!loginUser) {
-      return false
-    }
-    return loginUser.id === picture.value.user.id || loginUser.userRole === 'admin'
-  } catch (e) {
-    return false
-  }
-})
 
 const onDownload = () => {
   downloadFile(picture.value.url, picture.value.name)
@@ -151,6 +140,18 @@ const onDownload = () => {
 onMounted(() => {
   fetchData();
 })
+
+// 通用权限检查函数
+function createPermissionChecker(permission: string) {
+  return computed(() => {
+    return (picture.value.permissionList ?? []).includes(permission)
+  })
+}
+
+// 定义权限检查
+const canEdit = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_EDIT)
+const canDelete = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_DELETE)
+
 
 </script>
 

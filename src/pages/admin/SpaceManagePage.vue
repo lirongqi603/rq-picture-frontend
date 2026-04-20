@@ -149,10 +149,10 @@ const doDelete = async (key) => {
       message.success("删除成功")
       await fetchData()
     } else {
-      message.success("删除失败")
+      message.error("删除失败:"+ res.data.message)
     }
   } catch (e) {
-    message.success("删除失败", e)
+    message.error("删除失败", e)
   }
 }
 

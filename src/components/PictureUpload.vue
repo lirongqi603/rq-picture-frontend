@@ -41,7 +41,7 @@ const handleUpload = async ({file}: any) => {
       message.success("上传成功")
       props.onSuccess?.(res.data.data)
     } else {
-      message.error("上传失败")
+      message.error("上传失败：" + res.data.message)
     }
   } catch (e) {
     message.error("上传失败", e)

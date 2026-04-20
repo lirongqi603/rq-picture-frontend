@@ -9,10 +9,12 @@ import {useRouter} from "vue-router";
 import {useLoginUserStore} from "@/stores/useLoginUserStore";
 import {listPageVoUsingPost} from "@/api/spaceController";
 import {onMounted} from "vue";
+import {SPACE_TYPE_ENUM} from "@/utills/SpaceType";
 
 const router = useRouter();
 
 const checkExistSpace = async () => {
+  debugger
   const loginUser = useLoginUserStore();
   if (!loginUser.loginUser.id) {
     router.replace({
@@ -22,7 +24,8 @@ const checkExistSpace = async () => {
   const res = await listPageVoUsingPost({
     current: 1,
     pageSize: 1,
-    userId: loginUser.loginUser.id
+    userId: loginUser.loginUser.id,
+    spaceType: SPACE_TYPE_ENUM.PRIVATE
   })
   if (res.data.code === 0 && res.data.data?.total > 0) {
     router.replace({

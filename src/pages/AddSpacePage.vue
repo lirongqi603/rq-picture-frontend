@@ -1,6 +1,6 @@
 <template>
   <div id="addSpacePage">
-    <h2>{{ route.query?.id ? '修改空间' : '创建空间' }}</h2>
+    <h2>{{ route.query?.id ? '修改空间' : '创建空间' }} ({{ spaceType === 1 ? '团队空间' : '私有空间' }})</h2>
     <a-form name="spaceForm" :model="spaceForm" @finish="handleSubmit" layout="vertical">
       <a-form-item name="spaceName" label="空间名称">
         <a-input v-model:value="spaceForm.spaceName" placeholder="请输入空间名称" allow-clear/>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watchEffect} from "vue";
 import {
   addSpaceUsingPost,
   editSpaceUsingPost,
@@ -44,6 +44,9 @@ const spaceForm = reactive<API.SpaceEditRequest | API.SpaceAddRequest>({})
 const spaceLevelList = ref<{ value: string; label: string; maxSize: number; maxCount: number }[]>([])
 const loading = ref<boolean>(false);
 
+const route = useRoute();
+const spaceType = ref<number>()
+spaceType.value = route.query?.type ? Number(route.query.type) : 0;
 const router = useRouter();
 
 const handleSubmit = async () => {
@@ -59,6 +62,7 @@ const handleSubmit = async () => {
     });
   } else {
     res = await addSpaceUsingPost({
+      spaceType: spaceType.value,
       ...spaceForm
     });
   }
@@ -86,8 +90,6 @@ const getSpaceLevelList = async () => {
   }
 }
 
-const route = useRoute();
-
 const fetchData = async () => {
   const spaceId = route.query?.id;
   if (!spaceId) {
@@ -99,12 +101,18 @@ const fetchData = async () => {
     spaceForm.id = res.data.data.id;
     spaceForm.spaceName = res.data.data.spaceName;
     spaceForm.spaceLevel = res.data.data.spaceLevel;
+  } else {
+    message.error("获取数据失败：" + res.data.message)
   }
 }
 
 onMounted(() => {
   getSpaceLevelList();
   fetchData();
+})
+
+watchEffect(() => {
+  spaceType.value = route.query?.type ? Number(route.query.type) : 0;
 })
 </script>
 

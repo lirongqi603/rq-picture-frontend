@@ -19,8 +19,8 @@
             </a-card-meta>
             <template #actions v-if="props.operate">
               <ShareAltOutlined @click="e=>shareHandle(e,picture)"/>
-              <EditOutlined @click="e=>editHandle(e,picture)"/>
-              <DeleteOutlined @click="e=>deleteHandle(e,picture)"/>
+              <EditOutlined v-if="props.canEdit" @click="e=>editHandle(e,picture)"/>
+              <DeleteOutlined v-if="props.canDel" @click="e=>deleteHandle(e,picture)"/>
             </template>
           </a-card>
         </a-list-item>
@@ -43,6 +43,8 @@ interface Props {
   dataList: API.PictureVo[],
   loading: boolean,
   operate: boolean,
+  canEdit: boolean,
+  canDel: boolean,
   onReload?: () => void
 }
 
@@ -52,6 +54,8 @@ const props = withDefaults<Props>(
     dataList: () => [],
     loading: false,
     operate: false,
+    canEdit: false,
+    canDel: false
   }
 );
 
@@ -85,10 +89,10 @@ const deleteHandle = async (e, picture: API.PictureVo) => {
       message.success("删除成功")
       props?.onReload?.();
     } else {
-      message.success("删除失败")
+      message.error("删除失败:" + res.data.message)
     }
   } catch (e) {
-    message.success("删除失败", e)
+    message.error("删除失败", e)
   }
 }
 </script>

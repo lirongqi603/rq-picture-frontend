@@ -1,25 +1,22 @@
 <template>
-  <div id="GlobalSider">
     <a-layout-sider  v-if="loginUserStore.loginUser.id" width="200" style="background: #fff" collapsed-width="0" breakpoint="lg">
-      <a-menu v-model:selectedKeys="current" mode="inline" :items="items" @click="doMenuClick"/>
+      <a-menu v-model:selectedKeys="current" mode="inline" :items="menuItems" @click="doMenuClick"/>
     </a-layout-sider>
-  </div>
 </template>
 
 <script setup lang="ts">
-import {computed, h, ref} from 'vue';
-import {PictureOutlined, UserOutlined} from '@ant-design/icons-vue';
+import {computed, h, ref, watchEffect} from 'vue';
+import {PictureOutlined, UserOutlined, TeamOutlined} from '@ant-design/icons-vue';
 import {MenuProps, message} from 'ant-design-vue';
 import {useRouter} from "vue-router";
 import {useLoginUserStore} from "@/stores/useLoginUserStore";
-import {userLogoutUsingPost} from "@/api/userController";
+import {SPACE_TYPE_ENUM} from "@/utills/SpaceType";
+import {myTeamSpaceUsingPost} from "@/api/spaceUserController";
 
 //动态路演跳转
 const router = useRouter();
 const doMenuClick = ({key}) => {
-  router.push({
-    path: key
-  })
+  router.push(key)
 }
 
 //菜单高亮
@@ -43,44 +40,52 @@ const originItems = ref<MenuProps['items']>([
     title: '我的空间',
     icon: () => h(UserOutlined),
   },
+  {
+    key: '/add_space?type=' + SPACE_TYPE_ENUM.TEAM,
+    label: '创建团队空间',
+    title: '创建团队空间',
+    icon: () => h(TeamOutlined),
+  },
 ]);
 
-const filterMenu = (menus = [] as MenuProps['items']) => {
-  if (!Array.isArray(menus)) {
-    return [];
+const teamSpaceList = ref<API.SpaceVo[]>([])
+const fetchSpaceList = async () => {
+  const res = await myTeamSpaceUsingPost();
+  if (res.data.code === 0 && res.data.data) {
+    teamSpaceList.value = res.data.data
+  }else {
+    message.error('加载我的团队空间失败，' + res.data.message)
   }
+}
 
-  return menus?.filter((item) => {
-    const loginUser = loginUserStore.loginUser;
-    if (item.key.startsWith("/admin")) {
-      if (!loginUser || loginUser.userRole !== "admin") {
-        return false
-      }
-    } else if (item.key != '/' && !loginUser.id) {
-      return false
+const menuItems = computed(() => {
+  // 没有团队空间，只展示固定菜单
+  if (teamSpaceList.value.length < 1) {
+    return originItems.value;
+  }
+  // 展示团队空间分组
+  const teamSpaceSubMenus = teamSpaceList.value.map((space) => {
+    return {
+      key: '/space/' + space.id,
+      label: space?.spaceName,
     }
-    return true
   })
-}
-
-const items = computed<MenuProps['items']>(() => filterMenu(originItems.value))
-
-const doLogout = async () => {
-  try {
-    const res = await userLogoutUsingPost()
-    if (res.data.code === 0) {
-      message.success("退出登录成功")
-      window.location.href = "/user/login"
-    } else {
-      message.success("退出登录失败")
-    }
-  } catch (e) {
-    message.success("退出登录失败", e)
+  const teamSpaceMenuGroup = {
+    type: 'group',
+    label: '我的团队',
+    key: 'teamSpace',
+    children: teamSpaceSubMenus,
   }
-}
+  return [...originItems.value,teamSpaceMenuGroup]
+})
+
+
+watchEffect(() => {
+    if (loginUserStore.loginUser.id) {
+      fetchSpaceList()
+    }
+  }
+)
 </script>
 <style scoped>
-#GlobalSider :deep(.ant-layout-sider-zero-width-trigger){
-  background: #9ebcd9;
-}
 </style>
