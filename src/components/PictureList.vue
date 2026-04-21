@@ -77,7 +77,8 @@ const editHandle = (e, picture: API.PictureVo) => {
   router.push({
     path: `/add_picture`,
     query: {
-      id: picture.id
+      id: picture.id,
+      spaceId: picture.spaceId
     }
   })
 }

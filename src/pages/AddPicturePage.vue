@@ -51,7 +51,7 @@
         <a-button type="primary" html-type="submit" style="width: 100%">{{ route.query?.id ? '修改' : '创建' }}</a-button>
       </a-form-item>
     </a-form>
-    <EditPicture ref="editPicture" :picture="picture" :onSuccess="editPictureSuccess"/>
+    <EditPicture ref="editPicture" :picture="picture" :onSuccess="editPictureSuccess" :space="space"/>
     <OutPaintingPicture ref="outPaintPicture" :picture="picture" :onSuccess="outPaintPictureSuccess"/>
   </div>
 </template>
@@ -61,11 +61,12 @@ import PictureUpload from "@/components/PictureUpload.vue";
 import UrlUpload from "@/components/UrlUpload.vue";
 import EditPicture from "@/components/EditPicture.vue";
 import OutPaintingPicture from "@/components/OutPaintingPicture.vue";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watchEffect} from "vue";
 import {EditOutlined, FullscreenOutlined} from '@ant-design/icons-vue';
 import {editPictureUsingPost, getPictureVoByIdUsingGet, listPictureTagCategoryUsingGet} from "@/api/pictureController";
 import {message} from "ant-design-vue";
 import {useRoute, useRouter} from "vue-router";
+import {getSpaceVoByIdUsingGet} from "@/api/spaceController";
 
 const picture = ref<API.PictureVo>({});
 const pictureForm = reactive<API.PictureEditRequest>({})
@@ -158,6 +159,26 @@ onMounted(() => {
   getPictureTagCategoryList();
   fetchData();
 })
+
+const space = ref<API.SpaceVo>()
+
+// 获取空间信息
+const fetchSpace = async () => {
+  // 获取数据
+  if (picture.value.spaceId) {
+    const res = await getSpaceVoByIdUsingGet({
+      id: picture.value.spaceId,
+    })
+    if (res.data.code === 0 && res.data.data) {
+      space.value = res.data.data
+    }
+  }
+}
+
+watchEffect(() => {
+  fetchSpace()
+})
+
 </script>
 
 <style scoped>

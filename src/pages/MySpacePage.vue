@@ -14,7 +14,6 @@ import {SPACE_TYPE_ENUM} from "@/utills/SpaceType";
 const router = useRouter();
 
 const checkExistSpace = async () => {
-  debugger
   const loginUser = useLoginUserStore();
   if (!loginUser.loginUser.id) {
     router.replace({
