@@ -10,7 +10,7 @@
           <EditOutlined/>
           批量编辑图片
         </a-button>
-        <a-button v-if="canManageSpaceUser" type="primary" :href="`/space_user?spaceId=${space.id}`" target="_blank">
+        <a-button v-if="canManageSpaceUser&&space.spaceType === SPACE_TYPE_ENUM.TEAM" type="primary" :href="`/space_user?spaceId=${space.id}`" target="_blank">
           <UserOutlined/>
           成员管理
         </a-button>

@@ -25,6 +25,10 @@
               </a-space>
               <template #overlay>
                 <a-menu>
+                  <a-menu-item @click="editUser">
+                    <EditOutlined/>
+                    个人信息
+                  </a-menu-item>
                   <a-menu-item @click="()=>{router.push({path: '/my_space'})}">
                     <UserOutlined/>
                     我的空间
@@ -41,18 +45,19 @@
             <a-button type="primary" href="/user/login">登录</a-button>
           </div>
         </div>
-
       </a-col>
     </a-row>
+    <EditUserInfo ref="refEditUser"/>
   </div>
 </template>
 <script setup lang="ts">
 import {computed, h, ref} from 'vue';
-import {HomeOutlined, DownOutlined, LoginOutlined, UserOutlined} from '@ant-design/icons-vue';
+import {HomeOutlined, DownOutlined, LoginOutlined, UserOutlined, EditOutlined} from '@ant-design/icons-vue';
 import {MenuProps, message} from 'ant-design-vue';
 import {useRouter} from "vue-router";
 import {useLoginUserStore} from "@/stores/useLoginUserStore";
 import {userLogoutUsingPost} from "@/api/userController";
+import EditUserInfo from "@/components/EditUserInfo.vue";
 
 //动态路演跳转
 const router = useRouter();
@@ -136,6 +141,11 @@ const doLogout = async () => {
   } catch (e) {
     message.success("退出登录失败", e)
   }
+}
+
+const refEditUser = ref<any>()
+const editUser = () => {
+  refEditUser.value.openModel()
 }
 </script>
 <style scoped>

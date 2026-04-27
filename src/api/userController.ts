@@ -29,6 +29,18 @@ export async function userDeleteUsingPost(
   })
 }
 
+/** edit POST /api/user/edit */
+export async function editUsingPost(body: API.UserEditRequest, options?: { [key: string]: any }) {
+  return request<API.BaseResponseBoolean_>('/api/user/edit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** getUserLogin GET /api/user/get/login */
 export async function getUserLoginUsingGet(options?: { [key: string]: any }) {
   return request<API.BaseResponseUserLoginVo_>('/api/user/get/login', {

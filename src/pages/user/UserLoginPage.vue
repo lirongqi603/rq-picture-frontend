@@ -58,6 +58,8 @@ const onFinish = async (values: any) => {
         path: '/',
         replace: true
       })
+    } else {
+      message.error("登录失败：" + res.data.message)
     }
   } catch (e) {
     message.error("登录失败", e)

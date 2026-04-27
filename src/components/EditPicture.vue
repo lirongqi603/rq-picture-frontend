@@ -3,11 +3,11 @@
     <vueCropper
       ref="cropper"
       :img="props.picture.url"
-      :outputSize="props.picture.picSize"
       outputType="png"
       :autoCrop="true"
       :canMove="false"
       :centerBox="true"
+      :canScale="false"
       :info="true"
     ></vueCropper>
     <div style="margin-bottom: 16px"></div>

@@ -773,6 +773,17 @@ declare namespace API {
     userRole: string
   }
 
+  type UserEditRequest = {
+    /** id */
+    id?: number
+    /** 用户昵称 */
+    userName?: string
+    /** 用户头像 */
+    userAvatar?: string
+    /** 用户简介 */
+    userProfile?: string
+  }
+
   type UserInfoVo = {
     /** id */
     id?: number
